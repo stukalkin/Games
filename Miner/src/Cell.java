@@ -43,7 +43,7 @@ public class Cell {
     void paintBomb (Graphics g, int x, int y, Color color) {
         g.setColor(color);
         g.fillRect(x*Miner.BLOCK_SIZE+7, y*Miner.BLOCK_SIZE+10, 18, 10);
-        g.fillRect(x*Miner.BLOCK_SIZE+11, y*Miner.BLOCK_SIZE+6, 10, 16);
+        g.fillRect(x*Miner.BLOCK_SIZE+11, y*Miner.BLOCK_SIZE+6, 10, 18);
         g.fillRect(x*Miner.BLOCK_SIZE+9, y*Miner.BLOCK_SIZE+8, 14, 14);
         g.setColor(Color.WHITE);
         g.fillRect(x*Miner.BLOCK_SIZE+11, y*Miner.BLOCK_SIZE+10, 4, 4);

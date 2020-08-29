@@ -11,7 +11,7 @@ public class Miner extends JFrame {
     static final int BLOCK_SIZE = 30;
     static final int FIELD_SIZE = 9;
     final int FIELD_DX = 6;
-    final int FIELD_DY = 28;
+    final int FIELD_DY = 28 + 17;
     final int START_LOCATION = 200;
     final int MOUSE_BUTTON_LEFT = 1;
     final int MOUSE_BUTTON_RIGHT = 3;
@@ -33,6 +33,8 @@ public class Miner extends JFrame {
         setBounds(START_LOCATION, START_LOCATION,
                 FIELD_SIZE*BLOCK_SIZE+FIELD_DX, FIELD_SIZE*BLOCK_SIZE+FIELD_DY);
         setResizable(false);
+        TimerLabel timerLabel = new TimerLabel();
+        timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
         Canvas canvas = new Canvas();
         canvas.setBackground(Color.WHITE);
         canvas.addMouseListener(new MouseAdapter() {
@@ -43,8 +45,7 @@ public class Miner extends JFrame {
                 int y = e.getY()/BLOCK_SIZE;
                 if (e.getButton() == MOUSE_BUTTON_LEFT && !bangMine && !youWin)
                     if (field[y][x].isNotOpen()) {
-                        //openCells(x, y);
-                        field[y][x].open();
+                        openCells(x, y);
                         youWin = countOpenedCell == FIELD_SIZE*FIELD_SIZE - NUMBER_OF_MINES;
                         if (bangMine) {
                             bangX = x;
@@ -52,12 +53,12 @@ public class Miner extends JFrame {
                         }
                     }
                 if (e.getButton() == MOUSE_BUTTON_RIGHT) field[y][x].inverseFlag();
-                //if (bangMine || youWin) timeLabel.stopTimer();
+                if (bangMine || youWin) timerLabel.stopTimer();
                 canvas.repaint();
             }
         });
         add(BorderLayout.CENTER, canvas);
-        //add(BorderLayout.SOUTH, timeLabel);
+        add(BorderLayout.SOUTH, timerLabel);
         setVisible(true);
         initField();
     }
@@ -97,5 +98,14 @@ public class Miner extends JFrame {
                 }
             }
         }
+    }
+
+    void openCells(int x, int y) {
+        if (x < 0 || x > FIELD_SIZE-1 || y < 0 || y > FIELD_SIZE-1) return;
+        if (!field[y][x].isNotOpen()) return;
+        field[y][x].open();
+        if (field[y][x].getCountBomb() > 0 || bangMine) return;
+        for (int dx = -1; dx < 2; dx++)
+            for (int dy = -1; dy < 2; dy++) openCells(x + dx, y + dy);
     }
 }
